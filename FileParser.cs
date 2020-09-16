@@ -13,20 +13,22 @@ namespace Prom_IT
 
             if (File.Exists(fileName))
             {
-                if (GetEncoding(fileName) != Encoding.UTF8)
+                if (GetEncoding(fileName).BodyName != Encoding.UTF8.BodyName)
                 {
                     throw new FileLoadException();
                 }
+                
+                
                 // Process file
                 FileStream fs = File.OpenRead(fileName);
                 StreamReader reader = new StreamReader(fs);
 
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    string line = System.Text.RegularExpressions.Regex.Replace(reader.ReadLine(), @"\s+", " ");
                     foreach (string word in line.Split(' '))
                     {
-                        Console.WriteLine(word);
+                        words.Add(word);
                     }
                 }
             }
@@ -34,7 +36,6 @@ namespace Prom_IT
             {
                 throw new FileNotFoundException();
             }
-
             return words;
         }
         /// <summary
