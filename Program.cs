@@ -17,35 +17,31 @@ namespace Prom_IT
         }
         static void Main(string[] args)
         {
-            // Parse arguments here
-            /*
-             * --create, -c - Create new dictionary
-             * --update, -u - Update existing dictionary
-             * --remove, -r - Remove existing dictionary
-             * --help, -h - Show help.
-             */
-            CommandLine.Parser.Default.ParseArguments<Options>(args)
-                .WithParsed(run)
-                .WithNotParsed(error);
+            Parser.Default.ParseArguments<Options>(args)
+                .WithParsed(Run)
+                .WithNotParsed(Error);
         }
-        static void run(Options opt)
+        static void Run(Options opt)
         {
+            // Create completer
+            var autocompleter = new Autocompleter();
+
             if (opt.Create.Length != 0)
             {
-                FileParser.parse(opt.Create);
+                autocompleter.Create(opt.Create);
             }
             else if (opt.Update.Length != 0)
             {
-                FileParser.parse(opt.Create);
+                autocompleter.Update(opt.Update);
             }
             else if (opt.Remove)
             {
-                // Remove data from db here
+                autocompleter.Remove();
             }
         }
-        static void error(IEnumerable<Error> errors)
+        static void Error(IEnumerable<Error> errors)
         {
-
+            
         }
     }
 }

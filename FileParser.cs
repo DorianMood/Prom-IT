@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -7,33 +6,35 @@ namespace Prom_IT
 {
     class FileParser
     {
-        public static List<string> parse(string fileName)
+        public static List<string> Parse(string fileName)
         {
             List<string> words = new List<string>();
 
             if (File.Exists(fileName))
             {
+                // Check encoding to be equal UTF-8
                 if (GetEncoding(fileName).BodyName != Encoding.UTF8.BodyName)
                 {
                     throw new FileLoadException();
                 }
-                
-                
-                // Process file
-                FileStream fs = File.OpenRead(fileName);
-                StreamReader reader = new StreamReader(fs);
 
-                while (!reader.EndOfStream)
+                // Process file
+                using (FileStream fs = File.OpenRead(fileName))
+                using (StreamReader reader = new StreamReader(fs))
                 {
-                    string line = System.Text.RegularExpressions.Regex.Replace(reader.ReadLine(), @"\s+", " ");
-                    foreach (string word in line.Split(' '))
+                    while (!reader.EndOfStream)
                     {
-                        words.Add(word);
+                        string line = System.Text.RegularExpressions.Regex.Replace(reader.ReadLine().Trim(), @"\s+", " ");
+                        foreach (string word in line.Split(' '))
+                        {
+                            words.Add(word);
+                        }
                     }
                 }
             }
             else
             {
+                // TODO : do not forget to handle this exception!
                 throw new FileNotFoundException();
             }
             return words;
@@ -51,13 +52,11 @@ namespace Prom_IT
             // call to any Read method of StreamReader, since encoding
             // autodetection is not done until the first call to a Read method.
 
-            using (var reader = new StreamReader(filename, Encoding.Default, true))
-            {
-                if (reader.Peek() >= 0) // you need this!
-                    reader.Read();
+            using var reader = new StreamReader(filename, Encoding.Default, true);
+            if (reader.Peek() >= 0) // you need this!
+                reader.Read();
 
-                return reader.CurrentEncoding;
-            }
+            return reader.CurrentEncoding;
         }
     }
 }
