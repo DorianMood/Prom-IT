@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Prom_IT
 {
     class FileParser
     {
-        public static List<string> Parse(string fileName)
+        public static HashSet<Completion> ParseCompletions(string fileName)
         {
-            List<string> words = new List<string>();
+            HashSet<Completion> completions = new HashSet<Completion>();
 
             if (File.Exists(fileName))
             {
@@ -27,7 +28,19 @@ namespace Prom_IT
                         string line = System.Text.RegularExpressions.Regex.Replace(reader.ReadLine().Trim(), @"\s+", " ");
                         foreach (string word in line.Split(' '))
                         {
-                            words.Add(word);
+                            if (word.Length < 3 || word.Length > 15)
+                                continue;
+                            Completion item;
+                            if (completions.Any(item => item.Word == word))
+                            {
+                                item = completions.First(item => item.Word == word);
+                                item.Frequency++;
+                            }
+                            else
+                            {
+                                item = new Completion() { Word = word, Frequency = 1 };
+                            }
+                            completions.Add(item);
                         }
                     }
                 }
@@ -37,7 +50,8 @@ namespace Prom_IT
                 // TODO : do not forget to handle this exception!
                 throw new FileNotFoundException();
             }
-            return words;
+            // TODO : Put this magic number to config
+            return completions.Where(item => item.Frequency >= 3).ToHashSet();
         }
         /// <summary
 
