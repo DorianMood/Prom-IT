@@ -25,11 +25,11 @@ namespace Prom_IT
             // Create completer
             var autocompleter = new Autocompleter();
 
-            if (opt.Create.Length != 0)
+            if (opt.Create != null && opt.Create.Length != 0)
             {
                 autocompleter.Create(opt.Create);
             }
-            else if (opt.Update.Length != 0)
+            else if (opt.Update != null && opt.Update.Length != 0)
             {
                 autocompleter.Update(opt.Update);
             }
