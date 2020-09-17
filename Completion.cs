@@ -1,5 +1,8 @@
-﻿namespace Prom_IT
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Prom_IT
 {
+    [Table("completions")]
     public class Completion
     {
         public int Id { get; set; }

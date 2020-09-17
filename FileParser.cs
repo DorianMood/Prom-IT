@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,12 +21,16 @@ namespace Prom_IT
                 }
 
                 // Process file
+                // Here we have "words" extraction algorithm.
+                // It's unclear what kind of input data is being considered as "word",
+                // so author decided to keep all the data between spaces as "word",
+                // another way id to process only words matching following expression "[a-zA-Z0-9_-]+".
                 using (FileStream fs = File.OpenRead(fileName))
                 using (StreamReader reader = new StreamReader(fs))
                 {
                     while (!reader.EndOfStream)
                     {
-                        string line = System.Text.RegularExpressions.Regex.Replace(reader.ReadLine().Trim(), @"\s+", " ");
+                        string line = System.Text.RegularExpressions.Regex.Replace(reader.ReadLine().Trim(), @"\s+", " ").ToLower();
                         foreach (string word in line.Split(' '))
                         {
                             if (word.Length < 3 || word.Length > 15)
@@ -47,18 +52,11 @@ namespace Prom_IT
             }
             else
             {
-                // TODO : do not forget to handle this exception!
                 throw new FileNotFoundException();
             }
-            // TODO : Put this magic number to config
-            return completions.Where(item => item.Frequency >= 3).ToHashSet();
+            int minFrequency = int.Parse(ConfigurationManager.AppSettings.Get("MinFrequency"));
+            return completions.Where(item => item.Frequency >= minFrequency).ToHashSet();
         }
-        /// <summary
-
-        /// Get File's Encoding
-
-        /// </summary>
-        /// <param name="filename">The path to the file
         private static Encoding GetEncoding(string filename)
         {
             // This is a direct quote from MSDN:  

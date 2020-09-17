@@ -6,21 +6,30 @@ namespace Prom_IT
 {
     class Editor
     {
+        private IAutocompleter completer;
         public Editor()
         {
-
+            completer = new Autocompleter();
         }
         public void RunCycle()
         {
             string line;
             while ((line = ReadLineWithCancel()) != "")
             {
-                // Perform autocompletion here
-
+                // Perform autocompletion
+                // Get completions for current word
+                List<Completion> completions = completer.GetCompletions(line);
+                // Display completions
+                foreach (Completion completion in completions)
+                {
+                    Console.WriteLine($"- {completion.Word}");
+                }
             }
         }
         public string ReadLineWithCancel()
         {
+            Console.Write("> ");
+
             string line = "";
             StringBuilder buffer = new StringBuilder();
 

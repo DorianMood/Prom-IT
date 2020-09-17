@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using CommandLine;
 
 namespace Prom_IT
@@ -27,26 +29,84 @@ namespace Prom_IT
 
             if (opt.Create != null && opt.Create.Length != 0)
             {
-                autocompleter.Create(opt.Create);
+                // Create new completions database
+                try
+                {
+                    autocompleter.Create(opt.Create);
+                }
+                catch (FileNotFoundException e)
+                {
+                    Console.WriteLine("No such file or directory.");
+                }
+                catch (FileLoadException e)
+                {
+                    Console.WriteLine("Please make sure specified file encoding is UTF-8.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Creating failed.");
+                    Console.WriteLine("Unknown error occured.");
+                    Console.WriteLine();
+                    Console.WriteLine(e.ToString());
+                }
             }
             else if (opt.Update != null && opt.Update.Length != 0)
             {
-                autocompleter.Update(opt.Update);
+                // Update existing completions database
+                try
+                {
+                    autocompleter.Update(opt.Update);
+                }
+                catch (FileNotFoundException e)
+                {
+                    Console.WriteLine("No such file or directory.");
+                }
+                catch (FileLoadException e)
+                {
+                    Console.WriteLine("Please make sure specified file encoding is UTF-8.");
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Updating failed.");
+                    Console.WriteLine("Unknown error occured.");
+                    Console.WriteLine();
+                    Console.WriteLine(e.ToString());
+                }
             }
             else if (opt.Remove)
             {
-                autocompleter.Remove();
+                // Remove existing completions database
+                try
+                {
+                    autocompleter.Remove();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Removing failed.");
+                    Console.WriteLine("Unknown error occured.");
+                    Console.WriteLine();
+                    Console.WriteLine(e.ToString());
+                }
             }
             else
             {
-                // Implement editor here.
-                Editor editor = new Editor();
-                editor.RunCycle();
+                // Create and run editor
+                try
+                {
+                    Editor editor = new Editor();
+                    editor.RunCycle();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unknown error occured.");
+                    Console.WriteLine();
+                    Console.WriteLine(e.ToString());
+                };
             }
         }
         static void Error(IEnumerable<Error> errors)
         {
-            
+            Console.WriteLine("Arguments parsing error occured.");
         }
     }
 }
