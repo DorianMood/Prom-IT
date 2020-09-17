@@ -37,6 +37,12 @@ namespace Prom_IT
             {
                 autocompleter.Remove();
             }
+            else
+            {
+                // Implement editor here.
+                Editor editor = new Editor();
+                editor.RunCycle();
+            }
         }
         static void Error(IEnumerable<Error> errors)
         {

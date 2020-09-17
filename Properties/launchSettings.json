@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Prom IT": {
-      "commandName": "Project",
-      "commandLineArgs": "-u \"test.txt\""
+      "commandName": "Project"
     }
   }
 }
