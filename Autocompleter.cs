@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Prom_IT
 {
-    class Autocompleter : IAutocompleter
+    public class Autocompleter : IAutocompleter
     {
         // Make it static ?
         private readonly CompletionContext dbContext;
