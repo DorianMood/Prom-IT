@@ -12,7 +12,7 @@ namespace Client
             [Value(0, Required = true, HelpText = "Host name or IP addres.")]
             public string Host { get; set; }
             [Value(1, Required = true, HelpText = "Host port.")]
-            public string Port { get; set; }
+            public int Port { get; set; }
         }
         static void Main(string[] args)
         {
@@ -26,9 +26,9 @@ namespace Client
 
             Console.WriteLine($"{opt.Host}:{opt.Port}");
 
-            /**
-             * 1. client.exe ip/hostname port
-             */
+            Client client = new Client(opt.Host, opt.Port);
+            List<Prom_IT.Completion> completions = client.GetCompletions("h");
+
         }
         static void DisplayHelp()
         {
