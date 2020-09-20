@@ -18,21 +18,25 @@ namespace Client
         {
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(Run)
-                .WithNotParsed(err => DisplayHelp());
+                .WithNotParsed(Error);
         }
+
+        private static void Error(IEnumerable<Error> obj)
+        {
+            throw new NotImplementedException();
+        }
+
         static void Run(Options opt)
         {
             Console.WriteLine("Starting client");
 
             Console.WriteLine($"{opt.Host}:{opt.Port}");
 
+
+
             /**
              * 1. client.exe ip/hostname port
              */
-        }
-        static void DisplayHelp()
-        {
-            Console.WriteLine("USAGE");
         }
     }
 }
