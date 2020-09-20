@@ -22,12 +22,26 @@ namespace Client
         }
         static void Run(Options opt)
         {
-            Console.WriteLine("Starting client");
-
-            Console.WriteLine($"{opt.Host}:{opt.Port}");
-
             Client client = new Client(opt.Host, opt.Port);
-            List<Prom_IT.Completion> completions = client.GetCompletions("h");
+            List<string> completions;
+            while (true)
+            {
+                Console.Write(">");
+                string command = Console.ReadLine();
+                if (command == "exit")
+                {
+                    break;
+                }
+                // TODO : Check if command is correct
+                if (command.Split(' ')[0] == "get" && command.Split(' ').Length == 2)
+                {
+                    completions = client.GetCompletions(command.Split(' ')[1]);
+                    foreach(string completion in completions)
+                    {
+                        Console.WriteLine($"- {completion}");
+                    }
+                }
+            }
 
         }
         static void DisplayHelp()

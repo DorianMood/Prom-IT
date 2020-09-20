@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 
 namespace Client
 {
@@ -17,9 +18,9 @@ namespace Client
             Port = port;
             TcpClient = new TcpClient(host, port);
         }
-        public List<Completion> GetCompletions(string word)
+        public List<string> GetCompletions(string word)
         {
-            List<Completion> completions = new List<Completion>();
+            List<string> completions = new List<string>();
 
             // Encode request to byte array
             Byte[] data = Encoding.ASCII.GetBytes($"get {word}\0");
@@ -32,11 +33,10 @@ namespace Client
             data = new byte[256];
             string response = string.Empty;
 
-            // Read response
+            // Read response and deserialize json
             int bytes = stream.Read(data, 0, data.Length);
             response = Encoding.ASCII.GetString(data, 0, bytes);
-
-            Console.WriteLine(response);
+            completions = (List<string>)JsonSerializer.Deserialize(response, typeof(List<string>));
 
             // Dispose stream
             stream.Close();

@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Prom_IT;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Server
 {
@@ -15,11 +18,13 @@ namespace Server
         private TcpListener TcpListener;
         private List<TcpClient> Clients;
         private bool IsRunning;
+        private Autocompleter Completer;
         public Server(int port)
         {
             Port = port;
             TcpListener = new TcpListener(new IPEndPoint(IPAddress.Any, Port));
             Clients = new List<TcpClient>();
+            Completer = new Autocompleter();
             IsRunning = false;
         }
         public void Start()
@@ -62,7 +67,7 @@ namespace Server
                 while (true)
                 {
                     MemoryStream bufferStream = new MemoryStream();
-                    // ******** Note 2 ********
+                    
                     byte[] buffer = new byte[1024];
                     int packetSize = await acceptedClient.GetStream().ReadAsync(buffer, 0, buffer.Length);
 
@@ -71,10 +76,13 @@ namespace Server
                         break;
                     }
 
-                    Console.WriteLine("Accepted new message from: IP: {0} Port: {1}\nMessage: {2}",
-                        ipEndPoint.Address, ipEndPoint.Port, Encoding.Default.GetString(buffer));
+                    // Console.WriteLine("Accepted new message from: IP: {0} Port: {1}\nMessage: {2}",
+                    //     ipEndPoint.Address, ipEndPoint.Port, Encoding.Default.GetString(buffer));
+                    // TODO : improve performance
 
-                    acceptedClient.GetStream().Write(Encoding.Default.GetBytes("response"));
+                    List<Completion> completions = Completer.GetCompletions("t");
+                    string json = JsonSerializer.Serialize(from item in completions select item.Word);
+                    acceptedClient.GetStream().Write(Encoding.Default.GetBytes(json));
                 }
             }
             catch (Exception)
