@@ -73,6 +73,8 @@ namespace Server
 
                     Console.WriteLine("Accepted new message from: IP: {0} Port: {1}\nMessage: {2}",
                         ipEndPoint.Address, ipEndPoint.Port, Encoding.Default.GetString(buffer));
+
+                    acceptedClient.GetStream().Write(Encoding.Default.GetBytes("response"));
                 }
             }
             catch (Exception)
