@@ -1,6 +1,7 @@
 ﻿using Prom_IT;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -39,7 +40,7 @@ namespace Client
             completions = (List<string>)JsonSerializer.Deserialize(response, typeof(List<string>));
 
             // Dispose stream
-            stream.Close();
+            //stream.Close();
 
             return completions;
         }

@@ -6,16 +6,34 @@ namespace Server
     {
         static void Main(string[] args)
         {
+
             Server server = new Server(1337);
             server.Start();
             while (true)
             {
                 Console.Write("> ");
-                string command = Console.ReadLine();
-                if (command == "exit")
+                string[] command = Console.ReadLine().Split(' ');
+                if (command.Length >= 1 && command[0] == "exit")
                 {
                     server.Stop();
                     break;
+                }
+                else if (command.Length == 2 && (command[0] == "create" || command[0] == "c"))
+                {
+                    // create new database from given file
+                    string fileName = command[1];
+                    server.Create(fileName);
+                }
+                else if (command.Length == 2 && (command[0] == "update" || command[0] == "u"))
+                {
+                    // update existing database from given file
+                    string fileName = command[1];
+                    server.Update(fileName);
+                }
+                else if (command.Length == 1 && (command[0] == "remove" || command[0] == "r"))
+                {
+                    // remove existing database
+                    server.Remove();
                 }
             }
             /**

@@ -39,6 +39,21 @@ namespace Server
             IsRunning = false;
             TcpListener.Stop();
         }
+        public void Create(string fileName)
+        {
+            Autocompleter completer = new Autocompleter();
+            completer.Create(fileName);
+        }
+        public void Update(string fileName)
+        {
+            Autocompleter completer = new Autocompleter();
+            completer.Update(fileName);
+        }
+        public void Remove()
+        {
+            Autocompleter completer = new Autocompleter();
+            completer.Remove();
+        }
         private async Task StartAcceptingClientsAsync()
         {
             while (IsRunning)
@@ -76,11 +91,11 @@ namespace Server
                         break;
                     }
 
-                    // Console.WriteLine("Accepted new message from: IP: {0} Port: {1}\nMessage: {2}",
-                    //     ipEndPoint.Address, ipEndPoint.Port, Encoding.Default.GetString(buffer));
-                    // TODO : improve performance
+                    Autocompleter completer = new Autocompleter();
 
-                    List<Completion> completions = Completer.GetCompletions("t");
+                    // TODO : check correct command here
+                    string word = Encoding.ASCII.GetString(buffer, 0, packetSize).Split(' ')[1];
+                    List<Completion> completions = completer.GetCompletions(word);
                     string json = JsonSerializer.Serialize(from item in completions select item.Word);
                     acceptedClient.GetStream().Write(Encoding.Default.GetBytes(json));
                 }

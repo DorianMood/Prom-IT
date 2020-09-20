@@ -32,6 +32,7 @@ namespace Client
                 {
                     break;
                 }
+
                 // TODO : Check if command is correct
                 if (command.Split(' ')[0] == "get" && command.Split(' ').Length == 2)
                 {

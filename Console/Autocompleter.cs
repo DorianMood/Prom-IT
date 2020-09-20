@@ -40,6 +40,7 @@ namespace Prom_IT
         {
             // Remove all completions
             dbContext.Clear();
+            dbContext.SaveChanges();
         }
         public void AddCompletions(HashSet<Completion> completions)
         {
