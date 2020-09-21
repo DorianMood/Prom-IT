@@ -1,13 +1,13 @@
 ﻿using Prom_IT;
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -18,13 +18,11 @@ namespace Server
         private TcpListener TcpListener;
         private List<TcpClient> Clients;
         private bool IsRunning;
-        private Autocompleter Completer;
         public Server(int port)
         {
             Port = port;
             TcpListener = new TcpListener(new IPEndPoint(IPAddress.Any, Port));
             Clients = new List<TcpClient>();
-            Completer = new Autocompleter();
             IsRunning = false;
         }
         public void Start()
@@ -32,7 +30,6 @@ namespace Server
             IsRunning = true;
             TcpListener.Start();
             Task task = Task.Run(() => StartAcceptingClientsAsync());
-            //task.Wait();
         }
         public void Stop()
         {
@@ -67,12 +64,8 @@ namespace Server
 
                     _ = Task.Run(() => StartReadingDataFromClient(acceptedClient));
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine("ERROR");
-                }
+                catch (Exception e) { }
             }
-            Console.WriteLine("Finishing");
         }
         private async Task StartReadingDataFromClient(TcpClient acceptedClient)
         {
@@ -82,7 +75,7 @@ namespace Server
                 while (true)
                 {
                     MemoryStream bufferStream = new MemoryStream();
-                    
+
                     byte[] buffer = new byte[1024];
                     int packetSize = await acceptedClient.GetStream().ReadAsync(buffer, 0, buffer.Length);
 
@@ -100,10 +93,7 @@ namespace Server
                     acceptedClient.GetStream().Write(Encoding.Default.GetBytes(json));
                 }
             }
-            catch (Exception)
-            {
-                Console.WriteLine("ERROR");
-            }
+            catch (Exception) { }
             finally
             {
                 acceptedClient.Close();

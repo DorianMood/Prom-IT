@@ -1,7 +1,6 @@
-﻿using System;
+﻿using CommandLine;
+using System;
 using System.Collections.Generic;
-using CommandLine;
-using CommandLine.Text;
 
 namespace Client
 {
@@ -22,6 +21,10 @@ namespace Client
         }
         static void Run(Options opt)
         {
+            Console.WriteLine($"Client started. Avaliable commands:\n" +
+                              $"\tget <prefix> - get completions for <prefix>.\n" +
+                              $"\texit - cancel execution and exit.");
+
             Client client = new Client(opt.Host, opt.Port);
             List<string> completions;
             while (true)
@@ -37,7 +40,7 @@ namespace Client
                 if (command.Split(' ')[0] == "get" && command.Split(' ').Length == 2)
                 {
                     completions = client.GetCompletions(command.Split(' ')[1]);
-                    foreach(string completion in completions)
+                    foreach (string completion in completions)
                     {
                         Console.WriteLine($"- {completion}");
                     }

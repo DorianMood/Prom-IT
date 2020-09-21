@@ -1,7 +1,7 @@
-﻿using System;
+﻿using CommandLine;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using CommandLine;
 
 namespace Prom_IT
 {
