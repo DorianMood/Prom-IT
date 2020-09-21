@@ -17,7 +17,7 @@ namespace Prom_IT
             List<Completion> completions =
                 (from c in dbContext.Completions
                  where c.Word.StartsWith(word)
-                 orderby c.Frequency, c.Word
+                 orderby c.Frequency descending, c.Word ascending
                  select c).Take(Limit).ToList();
             return completions;
         }
