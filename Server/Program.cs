@@ -33,7 +33,7 @@ namespace Server
                               $"\nConfigure your database in Server.dll.config file" +
                               $"\n");
 
-            Server server = new Server(1337);
+            Server server = new Server(opt.Port);
             server.Start();
             while (true)
             {
